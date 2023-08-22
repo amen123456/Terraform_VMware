@@ -1,0 +1,19 @@
+stages:
+   - init
+   - plan
+   - apply
+
+init_job:
+   stage: init
+   script:
+       - terraform init
+
+plan_job:
+   stage: plan
+   script:
+      - terraform plan
+
+plan_job:
+   stage: apply
+   script:
+      - terraform apply
