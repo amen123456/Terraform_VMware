@@ -31,7 +31,7 @@ data "vsphere_virtual_machine" "template" {
 //----end data sources---//
 //--ressources--//
 resource "vsphere_virtual_machine" "vm_machine" {
-    name= "VM-terraform"
+    name= "VM-terraform1"
     resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
     folder = "Amen Allah Ben Khalifa"
     datastore_id = data.vsphere_datastore.datastore.id
