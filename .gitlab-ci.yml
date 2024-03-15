@@ -1,6 +1,5 @@
 stages:
-  - init
-  - apply
+  - deploy
 
 variables:
   TF_VERSION: "1.2.0"
@@ -19,16 +18,11 @@ before_script:
   - export VSPHERE_PASSWORD=${VSPHERE_PASSWORD}
   - export VSPHERE_SERVER=${VSPHERE_SERVER}
 
-prepare_terraform:
-  stage: init
+deploy:
+  stage: deploy
   image: ubuntu:latest
   script:
     - terraform init
-
-plan_deploy:
-  stage: apply
-  image: ubuntu:latest
-  script:
     - terraform plan -out=tfplan
     - terraform apply -auto-approve tfplan
   only:
