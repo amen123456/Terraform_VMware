@@ -1,18 +1,44 @@
 stages:
-  - prepare
-  - deploy
+  - validate
+  - plan
+  - apply
 
-prepare:
-  stage: prepare
-  image: alpine:latest
-  script:
-    - echo "Running shell commands"
-    - apk add --no-cache jq # Example of installing a package
+variables:
+  TF_VERSION: "1.2.0"
+  VSPHERE_USER: $VSPHERE_USER
+  VSPHERE_PASSWORD: $VSPHERE_PASSWORD
 
-deploy:
-  stage: deploy
-  image: hashicorp/terraform:1.2.0
+before_script:
+  - apk add --update git bash
+  - 'which ssh-agent || ( apk add openssh-client )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+
+validate:
+  stage: validate
+  image: hashicorp/terraform:$TF_VERSION
   script:
     - terraform init
-    - terraform plan
-    - terraform apply
+    - terraform validate
+
+plan:
+  stage: plan
+  image: hashicorp/terraform:$TF_VERSION
+  script:
+    - terraform init
+    - terraform plan -out=plan.tfplan
+  artifacts:
+    paths:
+      - plan.tfplan
+    expire_in: 1 hour
+
+apply:
+  stage: apply
+  image: hashicorp/terraform:$TF_VERSION
+  script:
+    - terraform init
+    - terraform apply -input=false plan.tfplan
+  only:
+    - main
