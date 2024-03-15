@@ -4,9 +4,6 @@ stages:
 variables:
   TF_VERSION: "1.2.0"
   # Assurez-vous de sécuriser vos variables d'environnement dans les paramètres CI/CD de GitLab.
-  VSPHERE_USER: $VSPHERE_USER
-  VSPHERE_PASSWORD: $VSPHERE_PASSWORD
-  VSPHERE_SERVER: $VSPHERE_SERVER
 
 before_script:
   - apt-get update && apt-get install -y wget unzip
@@ -14,9 +11,6 @@ before_script:
   - unzip terraform_${TF_VERSION}_linux_amd64.zip -d /usr/local/bin/
   - terraform -v
   # Configurer les variables d'environnement pour Terraform
-  - export VSPHERE_USER=${VSPHERE_USER}
-  - export VSPHERE_PASSWORD=${VSPHERE_PASSWORD}
-  - export VSPHERE_SERVER=${VSPHERE_SERVER}
 
 deploy:
   stage: deploy
