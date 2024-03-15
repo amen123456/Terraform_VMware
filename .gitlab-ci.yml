@@ -1,17 +1,18 @@
 stages:
-  - setup
-  - terraform
+  - prepare
+  - deploy
 
-setup:
-  stage: setup
+prepare:
+  stage: prepare
   image: alpine:latest
   script:
-    - echo "Exécution de commandes shell ici"
-    - apk add --no-cache curl # Correction: Installation de 'curl' au lieu de 'quelquechose'
+    - echo "Running shell commands"
+    - apk add --no-cache jq # Example of installing a package
 
-terraform_plan:
-  stage: terraform
+deploy:
+  stage: deploy
   image: hashicorp/terraform:1.2.0
   script:
     - terraform init
     - terraform plan
+    - terraform apply
