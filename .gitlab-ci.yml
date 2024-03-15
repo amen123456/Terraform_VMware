@@ -1,29 +1,13 @@
 stages:
-  - prepare
   - plan
   - apply
 
 variables:
   TF_VERSION: "1.2.0"
 
-before_script:
-  - echo "Check Terraform version"
-  - terraform version
-
-prepare:
-  stage: prepare
-  image: alpine:latest
-  script:
-    - apk add --update wget unzip
-    - wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
-    - unzip terraform_${TF_VERSION}_linux_amd64.zip -d /usr/local/bin
-    - terraform version
-  only:
-    - main
-
 Terraform_plan:
-  stage: plan
   image: hashicorp/terraform:${TF_VERSION}
+  stage: plan
   script:
     - terraform init
     - terraform plan
@@ -31,8 +15,8 @@ Terraform_plan:
     - main
 
 Terraform_apply:
-  stage: apply
   image: hashicorp/terraform:${TF_VERSION}
+  stage: apply
   script:
     - terraform apply -auto-approve
   only:
