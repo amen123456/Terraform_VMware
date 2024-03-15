@@ -1,10 +1,10 @@
 variable "vsphere_login" {
-  default   = "Aba"
+  default   = "abk"
   type      = string
   sensitive = true
 }
 variable "vsphere_password" {
-  default   = "832DRdfaMz9Ms4"
+  default   = "+Q#i62XWpbi5_2"
   type      = string
   sensitive = true
 }
@@ -26,7 +26,7 @@ variable "network_name" {
 }
 variable "template_name" {
   type        = string
-  default     = "Amen"
+  default     = "Ubuntu-2004-Template"
 }
 
 

@@ -31,30 +31,30 @@ data "vsphere_virtual_machine" "template" {
 //----end data sources---//
 //--ressources--//
 resource "vsphere_virtual_machine" "vm_machine" {
-    name= "VM-terraform1"
-    resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
-    folder = "Amen Allah Ben Khalifa"
-    datastore_id = data.vsphere_datastore.datastore.id
-    guest_id = "ubuntu64Guest"
-    network_interface {
-        network_id = data.vsphere_network.network.id
-        adapter_type = "vmxnet3"
-    }
-    disk {
-        label = "disk0"
-        size  = 60
-        thin_provisioned = false
-    }
-    clone {
-        template_uuid = data.vsphere_virtual_machine.template.id
-    }
-}
-//--end ressources--//
-output "vm_ip_address" {
-  value = vsphere_virtual_machine.vm_machine.default_ip_address
+  count = 3
+
+  name = format("VM-%s", ["Master", "Worker1", "Worker2"][count.index])
+  resource_pool_id = data.vsphere_compute_cluster.cluster.resource_pool_id
+  folder = "Amen allah Ben Khalifa"
+  datastore_id = data.vsphere_datastore.datastore.id
+  guest_id = "ubuntu64Guest"
+  network_interface {
+    network_id = data.vsphere_network.network.id
+    adapter_type = "vmxnet3"
+  }
+  disk {
+    label = "disk0"
+    size  = 50
+    thin_provisioned = false
+  }
+  clone {
+    template_uuid = data.vsphere_virtual_machine.template.id
+  }
 }
 
-
+output "vm_ip_addresses" {
+  value = {for vm in vsphere_virtual_machine.vm_machine : vm.name => vm.default_ip_address}
+}
 
 
 
