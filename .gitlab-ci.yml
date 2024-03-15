@@ -1,25 +1,21 @@
+image: hashicorp/terraform:1.2.0
+
 stages:
   - init
   - plan
   - apply
 
-before_script:
-  - wget https://releases.hashicorp.com/terraform/1.2.0/terraform_1.2.0_linux_amd64.zip
-  - unzip terraform_1.2.0_linux_amd64.zip
-  - sudo mv terraform /usr/local/bin/
-  - terraform --version
-
 Terraform_init:
-   stage: init
-   script:
-       - terraform init
+  stage: init
+  script:
+    - terraform init
 
 Terraform_plan:
-   stage: plan
-   script:
-      - terraform plan
+  stage: plan
+  script:
+    - terraform plan
 
 Terraform_apply:
-   stage: apply
-   script:
-      - terraform apply
+  stage: apply
+  script:
+    - terraform apply -auto-approve
