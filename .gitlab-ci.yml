@@ -1,7 +1,8 @@
-stages:
-   - init
-   - plan
-   - apply
+before_script:
+  - wget https://releases.hashicorp.com/terraform/1.2.0/terraform_1.2.0_linux_amd64.zip
+  - unzip terraform_1.2.0_linux_amd64.zip
+  - sudo mv terraform /usr/local/bin/
+  - terraform --version
 
 Terraform_init:
    stage: init
