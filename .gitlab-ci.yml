@@ -1,23 +1,18 @@
 stages:
-  - plan
-  - apply
+  - prepare
+  - deploy
 
-variables:
-  TF_VERSION: "1.2.0"
+prepare:
+  image: alpine:latest
+  stage: prepare
+  script:
+    - echo "Préparation de l'environnement"
+    # Ajoutez ici d'autres commandes shell nécessaires à la préparation.
 
-Terraform_plan:
-  image: hashicorp/terraform:${TF_VERSION}
-  stage: plan
+deploy:
+  image: hashicorp/terraform:1.2.0
+  stage: deploy
   script:
     - terraform init
     - terraform plan
-  only:
-    - main
-
-Terraform_apply:
-  image: hashicorp/terraform:${TF_VERSION}
-  stage: apply
-  script:
     - terraform apply -auto-approve
-  only:
-    - main
