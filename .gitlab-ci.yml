@@ -1,18 +1,18 @@
 stages:
-  - prepare
-  - deploy
+  - setup
+  - terraform
 
-prepare:
+setup:
+  stage: setup
   image: alpine:latest
-  stage: prepare
   script:
-    - echo "Préparation de l'environnement"
-    # Ajoutez ici d'autres commandes shell nécessaires à la préparation.
+    - echo "Exécution de commandes shell ici"
+    - apk add --no-cache quelquechose # Exemple d'installation d'un paquet
 
-deploy:
+terraform_plan:
+  stage: terraform
   image: hashicorp/terraform:1.2.0
-  stage: deploy
   script:
     - terraform init
     - terraform plan
-    - terraform apply -auto-approve
+
