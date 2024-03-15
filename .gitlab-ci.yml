@@ -1,21 +1,20 @@
-image: hashicorp/terraform:1.2.0
-
 stages:
   - init
   - plan
   - apply
 
-Terraform_init:
-  stage: init
-  script:
-    - terraform init
+before_script:
+  - terraform --version
+  - terraform init
 
 Terraform_plan:
   stage: plan
+  image: hashicorp/terraform:1.2.0
   script:
-    - terraform plan
+    - terraform plan -out=tfplan
 
 Terraform_apply:
   stage: apply
+  image: hashicorp/terraform:1.2.0
   script:
-    - terraform apply -auto-approve
+    - terraform apply -auto-approve tfplan
