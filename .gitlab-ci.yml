@@ -7,7 +7,7 @@ setup:
   image: alpine:latest
   script:
     - echo "Exécution de commandes shell ici"
-    - apk add --no-cache quelquechose # Exemple d'installation d'un paquet
+    - apk add --no-cache curl # Correction: Installation de 'curl' au lieu de 'quelquechose'
 
 terraform_plan:
   stage: terraform
@@ -15,4 +15,3 @@ terraform_plan:
   script:
     - terraform init
     - terraform plan
-
