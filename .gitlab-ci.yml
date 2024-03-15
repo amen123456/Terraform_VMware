@@ -1,44 +1,35 @@
 stages:
-  - validate
-  - plan
+  - init
   - apply
 
 variables:
   TF_VERSION: "1.2.0"
+  # Assurez-vous de sécuriser vos variables d'environnement dans les paramètres CI/CD de GitLab.
   VSPHERE_USER: $VSPHERE_USER
   VSPHERE_PASSWORD: $VSPHERE_PASSWORD
+  VSPHERE_SERVER: $VSPHERE_SERVER
 
 before_script:
-  - apk add --update git bash
-  - 'which ssh-agent || ( apk add openssh-client )'
-  - eval $(ssh-agent -s)
-  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
+  - apt-get update && apt-get install -y wget unzip
+  - wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+  - unzip terraform_${TF_VERSION}_linux_amd64.zip -d /usr/local/bin/
+  - terraform -v
+  # Configurer les variables d'environnement pour Terraform
+  - export VSPHERE_USER=${VSPHERE_USER}
+  - export VSPHERE_PASSWORD=${VSPHERE_PASSWORD}
+  - export VSPHERE_SERVER=${VSPHERE_SERVER}
 
-validate:
-  stage: validate
-  image: hashicorp/terraform:$TF_VERSION
+prepare_terraform:
+  stage: init
+  image: ubuntu:latest
   script:
     - terraform init
-    - terraform validate
 
-plan:
-  stage: plan
-  image: hashicorp/terraform:$TF_VERSION
-  script:
-    - terraform init
-    - terraform plan -out=plan.tfplan
-  artifacts:
-    paths:
-      - plan.tfplan
-    expire_in: 1 hour
-
-apply:
+plan_deploy:
   stage: apply
-  image: hashicorp/terraform:$TF_VERSION
+  image: ubuntu:latest
   script:
-    - terraform init
-    - terraform apply -input=false plan.tfplan
+    - terraform plan -out=tfplan
+    - terraform apply -auto-approve tfplan
   only:
     - main
