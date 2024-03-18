@@ -1,19 +1,29 @@
 stages:
-   - init
-   - plan
-   - apply
+  - deploy
 
-init_job:
-   stage: init
-   script:
-       - terraform init
+variables:
+  TF_VERSION: "1.2.0"
+  # Assurez-vous de sécuriser vos variables d'environnement dans les paramètres CI/CD de GitLab.
+  VSPHERE_USER: $VSPHERE_USER
+  VSPHERE_PASSWORD: $VSPHERE_PASSWORD
+  VSPHERE_SERVER: $VSPHERE_SERVER
 
-plan_job:
-   stage: plan
-   script:
-      - terraform plan
+before_script:
+  - apt-get update && apt-get install -y wget unzip
+  - wget https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip
+  - unzip terraform_${TF_VERSION}_linux_amd64.zip -d /usr/local/bin/
+  - terraform -v
+  # Configurer les variables d'environnement pour Terraform
+  - export VSPHERE_USER=${VSPHERE_USER}
+  - export VSPHERE_PASSWORD=${VSPHERE_PASSWORD}
+  - export VSPHERE_SERVER=${VSPHERE_SERVER}
 
-plan_job1:
-   stage: apply
-   script:
-      - terraform apply
+deploy:
+  stage: deploy
+  image: ubuntu:latest
+  script:
+    - terraform init
+    - terraform plan -out=tfplan
+    - terraform apply -auto-approve tfplan
+  only:
+    - main
