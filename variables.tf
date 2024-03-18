@@ -8,6 +8,11 @@ variable "vsphere_password" {
   type      = string
   sensitive = true
 }
+variable "vsphere_server" {
+  default   = "vc-vstack-017-lab.virtualstack.tn"
+  type      = string
+  sensitive = true
+}
 variable "datastore_name" {
   default = "ds001-lab-ucs02-svc1-stor3-dtx1"
   type    = string

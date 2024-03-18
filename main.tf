@@ -1,7 +1,7 @@
 provider "vsphere" {
   user                 = var.vsphere_login
   password             = var.vsphere_password
-  vsphere_server       = "vc-vstack-017-lab.virtualstack.tn"
+  vsphere_server       = var.vsphere_server
   allow_unverified_ssl = true
 }
 //----data sources---//
@@ -20,7 +20,7 @@ data "vsphere_datastore" "datastore" {
 }
 ///getting the network
 data "vsphere_network" "network" {
-  name          = var.network_name
+  name = var.network_name
   datacenter_id = data.vsphere_datacenter.datacenter.id
 }
 //getting the vm template
